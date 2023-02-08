@@ -1,0 +1,2 @@
+# qt
+pyside6
