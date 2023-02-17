@@ -37,28 +37,28 @@ class Ui_MainWindow(object):
         self.groupBox_7.setObjectName(u"groupBox_7")
         self.lineEdit_10 = QLineEdit(self.groupBox_7)
         self.lineEdit_10.setObjectName(u"lineEdit_10")
-        self.lineEdit_10.setGeometry(QRect(50, 410, 411, 20))
+        self.lineEdit_10.setGeometry(QRect(30, 420, 420, 20)) # 第四列 第四个输入框
         self.pushButton_10 = QPushButton(self.groupBox_7)
         self.pushButton_10.setObjectName(u"pushButton_10")
-        self.pushButton_10.setGeometry(QRect(480, 350, 75, 23))
+        self.pushButton_10.setGeometry(QRect(470, 356, 80, 28)) #第四列 第一个按钮
         self.textBrowser_5 = QTextBrowser(self.groupBox_7)
         self.textBrowser_5.setObjectName(u"textBrowser_5")
-        self.textBrowser_5.setGeometry(QRect(40, 10, 511, 41))
+        self.textBrowser_5.setGeometry(QRect(30, 30, 518, 36)) # 第四列 第一个输入框
         self.lineEdit_11 = QLineEdit(self.groupBox_7)
         self.lineEdit_11.setObjectName(u"lineEdit_11")
-        self.lineEdit_11.setGeometry(QRect(50, 350, 411, 20))
+        self.lineEdit_11.setGeometry(QRect(30, 360, 420, 20)) # 第四列 第二个输入框
         self.pushButton_11 = QPushButton(self.groupBox_7)
         self.pushButton_11.setObjectName(u"pushButton_11")
-        self.pushButton_11.setGeometry(QRect(480, 380, 75, 23))
+        self.pushButton_11.setGeometry(QRect(470, 386, 80, 28)) # 第四列 第二个按钮
         self.pushButton_12 = QPushButton(self.groupBox_7)
         self.pushButton_12.setObjectName(u"pushButton_12")
-        self.pushButton_12.setGeometry(QRect(480, 410, 75, 23))
+        self.pushButton_12.setGeometry(QRect(470, 416, 80, 28)) # 第四列 第三个按钮
         self.lineEdit_12 = QLineEdit(self.groupBox_7)
         self.lineEdit_12.setObjectName(u"lineEdit_12")
-        self.lineEdit_12.setGeometry(QRect(50, 380, 411, 20))
+        self.lineEdit_12.setGeometry(QRect(30, 390, 420, 20)) # 第四列 第三个输入框
         self.widget_4 = QVideoWidget(self.groupBox_7)
         self.widget_4.setObjectName(u"widget_4")
-        self.widget_4.setGeometry(QRect(40, 70, 511, 271))
+        self.widget_4.setGeometry(QRect(30, 80, 518, 271)) # 第四列 视频区域
 
         self.gridLayout_2.addWidget(self.groupBox_7, 1, 1, 1, 1)
 
@@ -66,28 +66,28 @@ class Ui_MainWindow(object):
         self.groupBox_4.setObjectName(u"groupBox_4")
         self.textBrowser_2 = QTextBrowser(self.groupBox_4)
         self.textBrowser_2.setObjectName(u"textBrowser_2")
-        self.textBrowser_2.setGeometry(QRect(40, 20, 481, 41))
+        self.textBrowser_2.setGeometry(QRect(30, 30, 518, 36)) # 第一列 第一个输入框
         self.pushButton = QPushButton(self.groupBox_4)
         self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setGeometry(QRect(470, 360, 75, 23))
+        self.pushButton.setGeometry(QRect(470, 356, 80, 28)) # 第一列 第一个按钮
         self.lineEdit = QLineEdit(self.groupBox_4)
         self.lineEdit.setObjectName(u"lineEdit")
-        self.lineEdit.setGeometry(QRect(40, 360, 411, 20))
+        self.lineEdit.setGeometry(QRect(30, 360, 420, 20)) # 第一列 第二个输入框
         self.pushButton_2 = QPushButton(self.groupBox_4)
         self.pushButton_2.setObjectName(u"pushButton_2")
-        self.pushButton_2.setGeometry(QRect(470, 390, 75, 23))
+        self.pushButton_2.setGeometry(QRect(470, 386, 80, 28)) # 第一列 第二个按钮
         self.widget = QVideoWidget(self.groupBox_4)
         self.widget.setObjectName(u"widget")
-        self.widget.setGeometry(QRect(40, 80, 471, 271))
+        self.widget.setGeometry(QRect(30, 80, 518, 271)) # 第一列 视频区域
         self.pushButton_3 = QPushButton(self.groupBox_4)
         self.pushButton_3.setObjectName(u"pushButton_3")
-        self.pushButton_3.setGeometry(QRect(470, 420, 75, 23))
+        self.pushButton_3.setGeometry(QRect(470, 416, 80, 28)) # 第一列 第三个按钮
         self.lineEdit_2 = QLineEdit(self.groupBox_4)
         self.lineEdit_2.setObjectName(u"lineEdit_2")
-        self.lineEdit_2.setGeometry(QRect(40, 390, 411, 20))
+        self.lineEdit_2.setGeometry(QRect(30, 390, 420, 20)) # 第一列 第三个输入框
         self.lineEdit_3 = QLineEdit(self.groupBox_4)
         self.lineEdit_3.setObjectName(u"lineEdit_3")
-        self.lineEdit_3.setGeometry(QRect(40, 420, 411, 20))
+        self.lineEdit_3.setGeometry(QRect(30, 420, 420, 20)) # 第一列 第四个输入框
 
         self.gridLayout_2.addWidget(self.groupBox_4, 0, 0, 1, 1)
 
@@ -95,28 +95,28 @@ class Ui_MainWindow(object):
         self.groupBox_6.setObjectName(u"groupBox_6")
         self.widget_3 = QVideoWidget(self.groupBox_6)
         self.widget_3.setObjectName(u"widget_3")
-        self.widget_3.setGeometry(QRect(40, 80, 511, 271))
+        self.widget_3.setGeometry(QRect(30, 80, 518, 271)) # 第三列 视频区域
         self.lineEdit_7 = QLineEdit(self.groupBox_6)
         self.lineEdit_7.setObjectName(u"lineEdit_7")
-        self.lineEdit_7.setGeometry(QRect(50, 420, 411, 20))
+        self.lineEdit_7.setGeometry(QRect(30, 420, 420, 20)) # 第三列 第四个输入框
         self.lineEdit_8 = QLineEdit(self.groupBox_6)
         self.lineEdit_8.setObjectName(u"lineEdit_8")
-        self.lineEdit_8.setGeometry(QRect(50, 390, 411, 20))
+        self.lineEdit_8.setGeometry(QRect(30, 390, 420, 20)) # 第三列 第三个输入框
         self.lineEdit_9 = QLineEdit(self.groupBox_6)
         self.lineEdit_9.setObjectName(u"lineEdit_9")
-        self.lineEdit_9.setGeometry(QRect(50, 360, 411, 20))
+        self.lineEdit_9.setGeometry(QRect(30, 360, 420, 20)) # 第三列 第二个输入框
         self.textBrowser_4 = QTextBrowser(self.groupBox_6)
         self.textBrowser_4.setObjectName(u"textBrowser_4")
-        self.textBrowser_4.setGeometry(QRect(40, 20, 511, 41))
+        self.textBrowser_4.setGeometry(QRect(30, 30, 518, 36)) # 第三列 第一个输入框
         self.pushButton_7 = QPushButton(self.groupBox_6)
         self.pushButton_7.setObjectName(u"pushButton_7")
-        self.pushButton_7.setGeometry(QRect(480, 360, 75, 23))
+        self.pushButton_7.setGeometry(QRect(470, 356, 80, 28)) # 第三列 第一个按钮
         self.pushButton_8 = QPushButton(self.groupBox_6)
         self.pushButton_8.setObjectName(u"pushButton_8")
-        self.pushButton_8.setGeometry(QRect(480, 390, 75, 23))
+        self.pushButton_8.setGeometry(QRect(470, 386, 80, 28)) # 第三列 第二个按钮
         self.pushButton_9 = QPushButton(self.groupBox_6)
         self.pushButton_9.setObjectName(u"pushButton_9")
-        self.pushButton_9.setGeometry(QRect(480, 420, 75, 23))
+        self.pushButton_9.setGeometry(QRect(470, 416, 80, 28)) # 第三列 第三个按钮
 
         self.gridLayout_2.addWidget(self.groupBox_6, 1, 0, 1, 1)
 
@@ -124,28 +124,28 @@ class Ui_MainWindow(object):
         self.groupBox_5.setObjectName(u"groupBox_5")
         self.textBrowser_3 = QTextBrowser(self.groupBox_5)
         self.textBrowser_3.setObjectName(u"textBrowser_3")
-        self.textBrowser_3.setGeometry(QRect(30, 20, 511, 41))
+        self.textBrowser_3.setGeometry(QRect(30, 30, 518, 36)) # 第二列 第一个输入框
         self.widget_2 = QVideoWidget(self.groupBox_5)
         self.widget_2.setObjectName(u"widget_2")
-        self.widget_2.setGeometry(QRect(30, 80, 511, 271))
+        self.widget_2.setGeometry(QRect(30, 80, 518, 271)) # 第二列 视频区域
         self.pushButton_4 = QPushButton(self.groupBox_5)
         self.pushButton_4.setObjectName(u"pushButton_4")
-        self.pushButton_4.setGeometry(QRect(470, 420, 75, 23))
+        self.pushButton_4.setGeometry(QRect(470, 416, 80, 28)) # 第二列 第三个按钮
         self.lineEdit_4 = QLineEdit(self.groupBox_5)
         self.lineEdit_4.setObjectName(u"lineEdit_4")
-        self.lineEdit_4.setGeometry(QRect(40, 360, 411, 20))
+        self.lineEdit_4.setGeometry(QRect(30, 360, 420, 20)) # 第二列 第二个输入框
         self.lineEdit_5 = QLineEdit(self.groupBox_5)
         self.lineEdit_5.setObjectName(u"lineEdit_5")
-        self.lineEdit_5.setGeometry(QRect(40, 390, 411, 20))
+        self.lineEdit_5.setGeometry(QRect(30, 390, 420, 20)) # 第二列 第三个输入框
         self.lineEdit_6 = QLineEdit(self.groupBox_5)
         self.lineEdit_6.setObjectName(u"lineEdit_6")
-        self.lineEdit_6.setGeometry(QRect(40, 420, 411, 20))
+        self.lineEdit_6.setGeometry(QRect(30, 420, 420, 20)) # 第二列 第四个输入框
         self.pushButton_5 = QPushButton(self.groupBox_5)
         self.pushButton_5.setObjectName(u"pushButton_5")
-        self.pushButton_5.setGeometry(QRect(470, 390, 75, 23))
+        self.pushButton_5.setGeometry(QRect(470, 386, 80, 28)) # 第二列 第二个按钮
         self.pushButton_6 = QPushButton(self.groupBox_5)
         self.pushButton_6.setObjectName(u"pushButton_6")
-        self.pushButton_6.setGeometry(QRect(470, 360, 75, 23))
+        self.pushButton_6.setGeometry(QRect(470, 356, 80, 28)) # 第二列 第一个按钮
 
         self.gridLayout_2.addWidget(self.groupBox_5, 0, 1, 1, 1)
 

@@ -1,22 +1,15 @@
 import sys
-from PySide6 import QtWidgets, QtGui
 
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QGraphicsView,
-    QGraphicsScene,
-    QGraphicsEllipseItem,
-)
+from PySide6.QtWidgets import *
+from PySide6.QtGui import *
+from PySide6.QtCore import *
+from PySide6.QtMultimedia import *
+from PySide6.QtMultimediaWidgets import *
 
-from PySide6.QtGui import QPainterPath, QTransform, QPen, QBrush, QColor, QPainter
-
-from PySide6.QtCore import QThread, QUrl, Qt
-from PySide6.QtGui import QPainter
-from PySide6.QtMultimedia import (QAudio, QAudioOutput, QMediaFormat,
-                                  QMediaPlayer)
- 
 from ui.untitled import Ui_MainWindow
+from subAreaView import SubAreaView
+from subLineView import SubLineView
+
 
 
 PORT_PEN_COLOR = "#000000"
@@ -28,7 +21,7 @@ class VideoThread(QThread):
     def __init__(self, video_path, graphicsView):
         self.player = QMediaPlayer()
         self.item = QGraphicsVideoItem()
-        self.player.setVideoOutput(item)
+        self.player.setVideoOutput(self.item)
         self.graphicsView = graphicsView
         self.graphicsView.scene().addItem(self.item)
         self.graphicsView.show()
@@ -47,17 +40,15 @@ class VideoThread(QThread):
 class GraphicsView(QGraphicsView):
     def __init__(self, parent=None):
         super().__init__(parent)
-        self.setMouseTracking(True)
-
-        scene = QtWidgets.QGraphicsScene()
+        scene = QGraphicsScene(self)
         self.setScene(scene)
-        
-        self.setRenderHint(QPainter.RenderHint.Antialiasing)
 
-        self._pixmap_item = QtWidgets.QGraphicsPixmapItem()
+        self._pixmap_item = QGraphicsPixmapItem()
         scene.addItem(self.pixmap_item)
 
-        self._polygon_item = QtWidgets.QGraphicsPolygonItem(self.pixmap_item)
+        self._polygon_item = QGraphicsPolygonItem(self.pixmap_item)
+        self.polygon_item.setPen(QPen(Qt.black, 5, Qt.SolidLine))
+        self.polygon_item.setBrush(QBrush(Qt.red, Qt.VerPattern))
 
     @property
     def pixmap_item(self):
@@ -69,6 +60,18 @@ class GraphicsView(QGraphicsView):
 
     def setPixmap(self, pixmap):
         self.pixmap_item.setPixmap(pixmap)
+
+    def resizeEvent(self, event):
+        self.fitInView(self.pixmap_item, Qt.KeepAspectRatio)
+        super().resizeEvent(event)
+
+    def mousePressEvent(self, event):
+        sp = self.mapToScene(event.pos())
+        lp = self.pixmap_item.mapFromScene(sp)
+        poly = self.polygon_item.polygon()
+        poly.append(lp)
+        # self.ui.lineEdit_2.setText(2345234)
+        self.polygon_item.setPolygon(poly)
 
 
 
@@ -157,38 +160,55 @@ class Ellipse(QGraphicsEllipseItem):
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, parent = None) :
+    
+    def __init__(self, parent = None):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.lineEdit.setText("E:\\haitong\\VehicleTracking\\code\\demo\\day\\day-409-3-0000_0030.mp4")
-        self.ui.lineEdit_4.setText("E:\\haitong\\VehicleTracking\\code\\demo\\day\\day-409-3-0000_0030.mp4")
-        self.ui.lineEdit_9.setText("E:\\haitong\\VehicleTracking\\code\\demo\\day\\day-409-3-0000_0030.mp4")
-        self.ui.lineEdit_11.setText("E:\\haitong\\VehicleTracking\\code\\demo\\day\\day-409-3-0000_0030.mp4")
+        self.ui.LINE_POSITION = ""
+        self.ui.AREA_POSITION = ""
 
-        self.ui.lineEdit_2.setText("[[361, 194], [1044, 198], [1044,657], [374, 657]]")
-        self.ui.lineEdit_5.setText("[[361, 194], [1044, 198], [1044,657], [374, 657]]")
-        self.ui.lineEdit_8.setText("[[361, 194], [1044, 198], [1044,657], [374, 657]]")
-        self.ui.lineEdit_12.setText("[[361, 194], [1044, 198], [1044,657], [374, 657]]")
+        self.ui.lineEdit.setText("/Users/fengye/Desktop/vedio01.mp4")
+        self.ui.lineEdit_4.setText("/Users/fengye/Desktop/vedio01.mp4")
+        self.ui.lineEdit_9.setText("/Users/fengye/Desktop/vedio01.mp4")
+        self.ui.lineEdit_11.setText("/Users/fengye/Desktop/vedio01.mp4")
 
-        self.ui.lineEdit_3.setText("[(424, 461), (865, 461)]")
-        self.ui.lineEdit_6.setText("[(424, 461), (865, 461)]")
-        self.ui.lineEdit_7.setText("[(424, 461), (865, 461)]")
-        self.ui.lineEdit_10.setText("[(424, 461), (865, 461)]")
+        self.ui.lineEdit_2.setText("")
+        self.ui.lineEdit_5.setText("")
+        self.ui.lineEdit_8.setText("")
+        self.ui.lineEdit_12.setText("")
+
+        self.ui.lineEdit_3.setText("")
+        self.ui.lineEdit_6.setText("")
+        self.ui.lineEdit_7.setText("")
+        self.ui.lineEdit_10.setText("")
+
+        
 
         # self.ui.textBrowser.setText("检测框选区域：[[361, 194], [1044, 198], [1044,657], [374, 657]]\n\
         #     过线区域检测：[(424, 461), (865, 461)]")
         # self.ui.lineEdit2.setText('''检测框选区域：[[361, 194], [1044, 198], [1044,657], [374, 657]]
         #     过线区域检测：[(424, 461), (865, 461)]''')
         self.ui.pushButton.clicked.connect(self.loadVideo1)
-        self.ui.pushButton_2.clicked.connect(self.setLine)
-        self.ui.pushButton_3.clicked.connect(self.setArea)
+        # self.ui.pushButton_2.clicked.connect(self.setLine())
+        self.ui.pushButton_2.clicked.connect(lambda: self.setLine("line_2"))
+        self.ui.pushButton_5.clicked.connect(lambda: self.setLine("line_5"))
+        self.ui.pushButton_8.clicked.connect(lambda: self.setLine("line_8"))
+        self.ui.pushButton_11.clicked.connect(lambda: self.setLine("line_11"))
+        self.ui.pushButton_3.clicked.connect(lambda: self.setArea("area_3"))
+        self.ui.pushButton_4.clicked.connect(lambda: self.setArea("area_4"))
+        self.ui.pushButton_9.clicked.connect(lambda: self.setArea("area_9"))
+        self.ui.pushButton_12.clicked.connect(lambda: self.setArea("area_12"))
 
         self.ui.pushButton_6.clicked.connect(self.loadVideo2)
 
         self.ui.pushButton_7.clicked.connect(self.loadVideo3)
         self.ui.pushButton_10.clicked.connect(self.loadVideo4)
+
+        # Sub Window
+        # self.sub_window = SubLineView()
+        # self.ui.pushButton_2.clicked.connect(self.sub_window.show)
 
     def loadVideo1(self):
         video_path = self.ui.lineEdit.text()
@@ -242,30 +262,43 @@ class MainWindow(QMainWindow):
         self.player.setVideoOutput(self.ui.widget_4)     
         self.player.play()
 
-    def setLine(self):
-        self.ui.pushButton_2.setText("测试")
-        self.ui.pushButton_2.setEnabled(False)
-        self.ui.lineEdit_2.setEnabled(False)
+    def setLine(self, param):
+        self.ui.LINE_POSITION = param
+        child_win = SubLineView()
+        child_win.line_signal.connect(self.set_line_text)
+        child_win.exec()
 
-        self.graphicsview = GraphicsView()        
-        # pixmap = QtGui.QPixmap(QUrl.fromLocalFile("E:\\haitong\\VehicleTracking\\code\\demo\\day\\20230206115934.png"))
-        pixmap = QtGui.QPixmap("E:\\haitong\\VehicleTracking\\code\\demo\\day\\20230206115934.png")
-        self.graphicsview.setPixmap(pixmap)
-        self.setCentralWidget(GraphicsView())
-        self.show()
+    def set_line_text(self, chosen_line):
+        if self.ui.LINE_POSITION == "line_2":
+            self.ui.lineEdit_2.setText(chosen_line)
+        elif self.ui.LINE_POSITION == "line_5":
+            self.ui.lineEdit_5.setText(chosen_line)
+        elif self.ui.LINE_POSITION == "line_8":
+            self.ui.lineEdit_8.setText(chosen_line)
+        elif self.ui.LINE_POSITION == "line_11":
+            self.ui.lineEdit_12.setText(chosen_line)
 
-    def setArea(self):
-        self.ui.pushButton_3.setText("测试111")
-        self.ui.pushButton_3.setEnabled(False)
-        self.ui.lineEdit_3.setEnabled(False)
+    def setArea(self, param):
+        self.ui.AREA_POSITION = param
+        child_view = SubAreaView()
+        child_view.area_signal.connect(self.set_area_text)
+        child_view.exec()
 
-        self.setCentralWidget(GraphicsView())
-        self.show()
-    
+    def set_area_text(self, chosen_area):
+        if self.ui.AREA_POSITION == "area_3":
+            self.ui.lineEdit_3.setText(chosen_area)
+        elif self.ui.AREA_POSITION == "area_4":
+            self.ui.lineEdit_6.setText(chosen_area)
+        elif self.ui.AREA_POSITION == "area_9":
+            self.ui.lineEdit_7.setText(chosen_area)
+        elif self.ui.AREA_POSITION == "area_12":
+            self.ui.lineEdit_10.setText(chosen_area)
 
-if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
     win = MainWindow()
-    win.setWindowTitle("第一个程序11111")
+    win.resize(1400, 1200)
+    win.setWindowTitle("第一个程序")
     win.show()
     app.exit(app.exec())
+
