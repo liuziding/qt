@@ -1,8 +1,9 @@
 import sys
 
-from PySide6.QtWidgets import *
-from PySide6.QtGui import *
-from PySide6.QtCore import *
+from PySide6.QtWidgets import (QGraphicsView, QDialog, QGraphicsScene, QGraphicsPixmapItem, QHBoxLayout,
+    QPushButton, QLabel, QVBoxLayout, QGraphicsPolygonItem)
+from PySide6.QtGui import Qt, QPen, QBrush, QPixmap
+from PySide6.QtCore import Signal
 
 from polygon_ui import Ui_SubWindow
 
@@ -10,7 +11,6 @@ area_point = [] # 将点的坐标储存进此数组中
 
 class SubAreaView(QDialog, Ui_SubWindow):
     area_signal = Signal(str)       # 子窗信号，用于传递用户名
-    area_point = [] # 将点的坐标储存进此数组中
     def __init__(self,parent = None):
         super(SubAreaView, self).__init__(parent)
         self.setWindowTitle('画线')
@@ -49,6 +49,9 @@ class SubAreaView(QDialog, Ui_SubWindow):
 
     def click_cancel_btn(self):
         self.close() # 关闭窗口
+
+    def closeEvent(self, QCloseEvent):
+        area_point.clear() # 将点的坐标储存进此数组中
 
 class GraphicsView(QGraphicsView):
     def __init__(self, parent = None):
@@ -90,6 +93,5 @@ class GraphicsView(QGraphicsView):
         poly = self.polygon_item.polygon()
         poly.append(lp)
         self.polygon_item.setPolygon(poly)
-        print(area_point)
 
     

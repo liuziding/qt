@@ -1,8 +1,9 @@
 import sys
 
-from PySide6.QtWidgets import *
-from PySide6.QtGui import *
-from PySide6.QtCore import *
+from PySide6.QtWidgets import (QGraphicsView, QDialog, QGraphicsScene, QGraphicsPixmapItem, QHBoxLayout,
+    QPushButton, QLabel, QVBoxLayout, QGraphicsPolygonItem)
+from PySide6.QtGui import Qt, QPen, QBrush, QPixmap
+from PySide6.QtCore import Signal
 
 from polygon_ui import Ui_SubWindow
 
@@ -10,9 +11,9 @@ chosen_points = [] # 将点的坐标储存进此数组中
 
 class SubLineView(QDialog, Ui_SubWindow):
     line_signal = Signal(str)       # 子窗信号，用于传递用户名
-    chosen_points = [] # 将点的坐标储存进此数组中
     def __init__(self,parent = None):
         super(SubLineView, self).__init__(parent)
+        self.index = 1
         self.setWindowTitle('画线')
         self.setFixedSize(1000,800)
         layout = QHBoxLayout()
@@ -49,6 +50,9 @@ class SubLineView(QDialog, Ui_SubWindow):
 
     def click_cancel_btn(self):
         self.close() # 关闭窗口
+    
+    def closeEvent(self, QCloseEvent):
+        chosen_points.clear() # 将点的坐标储存进此数组中
 
 class GraphicsView(QGraphicsView):
     def __init__(self, parent = None):
