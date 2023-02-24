@@ -15,7 +15,7 @@ class SubLineView(QDialog, Ui_SubWindow):
         super(SubLineView, self).__init__(parent)
         self.index = 1
         self.setWindowTitle('画线')
-        self.resize(1000,800)
+        self.setFixedSize(1030,800)
         layout = QHBoxLayout()
         self.cancel_btn = QPushButton("取消")
         self.commit_btn = QPushButton('提交')
@@ -27,13 +27,15 @@ class SubLineView(QDialog, Ui_SubWindow):
         self.line_label = QLabel()
 
         self.graphicsview = GraphicsView()
+        self.graphicsview.setFixedSize(970, 550)
+        self.graphicsview.setContentsMargins(0,0,0,0)
         self.graphicsview.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         lay = QVBoxLayout(self.line_label)
         lay.addWidget(self.graphicsview)
 
-        pixmap = QPixmap("./inside.png")
-        pixmap.setDevicePixelRatio
-        self.graphicsview.setPixmap(pixmap)
+        pixmap = QPixmap("./inside.jpg")
+        new_pixmap = pixmap.scaled(pixmap.width() // 2, pixmap.height() // 2)
+        self.graphicsview.setPixmap(new_pixmap)
 
 
         main_layout = QVBoxLayout()
