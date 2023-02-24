@@ -14,7 +14,7 @@ class SubAreaView(QDialog, Ui_SubWindow):
     def __init__(self,parent = None):
         super(SubAreaView, self).__init__(parent)
         self.setWindowTitle('画线')
-        self.setFixedSize(1000,800)
+        self.resize(1000,800)
         layout = QHBoxLayout()
         self.cancel_btn = QPushButton("取消")
         self.commit_btn = QPushButton('提交')
@@ -26,6 +26,7 @@ class SubAreaView(QDialog, Ui_SubWindow):
         self.area_label = QLabel()
 
         self.graphicsview = GraphicsView()
+        self.graphicsview.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         lay = QVBoxLayout(self.area_label)
         lay.addWidget(self.graphicsview)
 
@@ -81,7 +82,7 @@ class GraphicsView(QGraphicsView):
         self.pixmap_item.setPixmap(pixmap)
 
     def resizeEvent(self, event):
-        self.fitInView(self.pixmap_item, Qt.KeepAspectRatio)
+        self.fitInView(self.pixmap_item, Qt.KeepAspectRatio | Qt.AlignLeft | Qt.AlignTop)
         super().resizeEvent(event)
 
     def mousePressEvent(self, event):

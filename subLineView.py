@@ -3,7 +3,7 @@ import sys
 from PySide6.QtWidgets import (QGraphicsView, QDialog, QGraphicsScene, QGraphicsPixmapItem, QHBoxLayout,
     QPushButton, QLabel, QVBoxLayout, QGraphicsPolygonItem)
 from PySide6.QtGui import Qt, QPen, QBrush, QPixmap
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, QRect
 
 from polygon_ui import Ui_SubWindow
 
@@ -15,7 +15,7 @@ class SubLineView(QDialog, Ui_SubWindow):
         super(SubLineView, self).__init__(parent)
         self.index = 1
         self.setWindowTitle('画线')
-        self.setFixedSize(1000,800)
+        self.resize(1000,800)
         layout = QHBoxLayout()
         self.cancel_btn = QPushButton("取消")
         self.commit_btn = QPushButton('提交')
@@ -27,10 +27,12 @@ class SubLineView(QDialog, Ui_SubWindow):
         self.line_label = QLabel()
 
         self.graphicsview = GraphicsView()
+        self.graphicsview.setAlignment(Qt.AlignLeft | Qt.AlignTop)
         lay = QVBoxLayout(self.line_label)
         lay.addWidget(self.graphicsview)
 
         pixmap = QPixmap("./inside.png")
+        pixmap.setDevicePixelRatio
         self.graphicsview.setPixmap(pixmap)
 
 
@@ -82,7 +84,7 @@ class GraphicsView(QGraphicsView):
         self.pixmap_item.setPixmap(pixmap)
 
     def resizeEvent(self, event):
-        self.fitInView(self.pixmap_item, Qt.KeepAspectRatio)
+        self.fitInView(self.pixmap_item, Qt.KeepAspectRatio | Qt.AlignLeft | Qt.AlignTop)
         super().resizeEvent(event)
 
     def mousePressEvent(self, event):
