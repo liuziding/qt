@@ -1,18 +1,34 @@
 import sys
-from PySide6.QtWidgets import QApplication,QPushButton,QVBoxLayout,\
-                      QHBoxLayout,QFileDialog,QWidget,QSlider
+from PySide6.QtWidgets import (QApplication,QPushButton,QVBoxLayout, QLabel,
+                      QHBoxLayout,QFileDialog,QWidget,QSlider, QScrollArea)
 from PySide6.QtCore import QUrl,Qt
 from PySide6.QtMultimedia import QMediaPlayer,QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
 
+class MyVideoWidget(QVideoWidget): #建立QVideoWidget的子类，重新keyPressEvent()事件
+    def __init__(self,parent=None):
+        super().__init__(parent)
+    def keyPressEvent(self,event):  #全屏后按Esc键回到原状态
+        if event.key() == Qt.Key_Escape and self.isFullScreen():
+            self.setFullScreen(False)
+    def mouseDoubleClickEvent(self,event): #双击全屏显示
+        if not self.isFullScreen():
+            self.setFullScreen(True)
+        else:
+            self.setFullScreen(False)
+
+class Label(QLabel):
+    def mousePressEvent(self,evt): #双击全屏显示
+        self.setStyleSheet("background-color: green; color: white;")
+
 class VideoPlayer(QWidget):
     def __init__(self, parent = None):
         super().__init__(parent)
-        self.resize(800, 600)
+        self.setFixedSize(1200, 760)
         self.setupUi()
 
     def setupUi(self): # 界面
-        self.videoWidget = QVideoWidget() # 显示视频的控件
+        self.videoWidget = MyVideoWidget() # 显示视频的控件
         self.audioOutput = QAudioOutput() # 播放音频设备
         self.audioOutput.setVolume(0.5) # 控制音量
         self.btn_open = QPushButton("打开媒体文件") # 打开音频或视频按钮
@@ -36,22 +52,21 @@ class VideoPlayer(QWidget):
         self.playback_rate_slider.setTickInterval(5)
         self.playback_rate_slider.setTickPosition(QSlider.TicksAbove)
 
-        self.btn_tab_video1 = QPushButton("按钮1")
-        self.btn_tab_video2 = QPushButton("按钮2")
-        self.btn_tab_video3 = QPushButton("按钮3")
-        self.btn_tab_video4 = QPushButton("按钮4")
-        self.btn_tab_video5 = QPushButton("按钮5")
-        self.btn_tab_video6 = QPushButton("按钮6")
-        self.btn_tab_video7 = QPushButton("按钮7")
+        scrollArea = QScrollArea(self)
+        top_widget = QWidget()
+        scrollArea.setFixedSize(200, 740)
+        scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        # top_widget.setStyleSheet("background-color: red;")
+        top_layout = QVBoxLayout()
+        for i in range(23):
+            text = Label(top_widget)
+            text.setText("标签 {0}".format(i))
+            text.setStyleSheet("background-color: yellow;")
+            text.setFixedSize(150, 40)
+            top_layout.addWidget(text) 
+        top_widget.setLayout(top_layout)
+        scrollArea.setWidget(top_widget)
 
-        tab_video_group_layout = QHBoxLayout() # tab水平布局
-        tab_video_group_layout.addWidget(self.btn_tab_video1)
-        tab_video_group_layout.addWidget(self.btn_tab_video2)
-        tab_video_group_layout.addWidget(self.btn_tab_video3)
-        tab_video_group_layout.addWidget(self.btn_tab_video4)
-        tab_video_group_layout.addWidget(self.btn_tab_video5)
-        tab_video_group_layout.addWidget(self.btn_tab_video6)
-        tab_video_group_layout.addWidget(self.btn_tab_video7)
 
 
         action_layout = QHBoxLayout() # 按钮水平布局
@@ -63,11 +78,14 @@ class VideoPlayer(QWidget):
         action_layout.addWidget(self.volume_slider)
         action_layout.addWidget(self.playback_rate_slider)
 
-        v = QVBoxLayout(self) # 垂直布局
-        v.addLayout(tab_video_group_layout)
-        v.addWidget(self.videoWidget)
-        v.addWidget(self.progress_slider)
-        v.addLayout(action_layout)
+        right_layout = QVBoxLayout(self) # 垂直布局
+        right_layout.setContentsMargins(216, 16, 16, 16)
+        right_layout.addWidget(self.videoWidget)
+        right_layout.addWidget(self.progress_slider)
+        right_layout.addLayout(action_layout)
+
+        main_layout = QHBoxLayout(self) # 主体水平布局
+        main_layout.addLayout(right_layout)
 
         self.player = QMediaPlayer(self) # 音频和视频播放器
         self.player.setVideoOutput(self.videoWidget) # 设置播放器的视频输出控件
@@ -105,6 +123,8 @@ class VideoPlayer(QWidget):
             self.playback_rate_slider.setValue(20)
 
     def btn_play_stop_clicked(self):
+        print(self.btn_play_stop.text())
+
         if self.btn_play_stop.text() == "播放":
             self.player.play()
             self.btn_play_stop.setText("暂停")
