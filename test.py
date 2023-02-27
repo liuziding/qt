@@ -1,10 +1,15 @@
 import sys
 
-from PySide6.QtWidgets import *
-from PySide6.QtGui import *
-from PySide6.QtCore import *
-from PySide6.QtMultimedia import *
-from PySide6.QtMultimediaWidgets import *
+from PySide6.QtWidgets import (QGraphicsView, QGraphicsScene, QGraphicsPixmapItem, QGraphicsPolygonItem,
+                               QGraphicsEllipseItem, QMainWindow, QApplication)
+from PySide6.QtGui import QPen, QBrush, QColor, QTransform, QPainterPath
+from PySide6.QtCore import QThread, Qt, QUrl
+from PySide6.QtMultimedia import QMediaPlayer
+from PySide6.QtMultimediaWidgets import QGraphicsVideoItem
+
+from ui.untitled import Ui_MainWindow
+from subAreaView import SubAreaView
+from subLineView import SubLineView
 
 from ui.untitled import Ui_MainWindow
 from subAreaView import SubAreaView
