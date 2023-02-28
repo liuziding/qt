@@ -1,7 +1,8 @@
 import sys
 from PySide6.QtWidgets import (QApplication,QPushButton,QVBoxLayout, QLabel,
-                      QHBoxLayout,QFileDialog,QWidget,QSlider, QScrollArea)
-from PySide6.QtCore import QUrl,Qt
+                      QHBoxLayout,QFileDialog,QWidget,QSlider, QScrollArea,
+                      QListWidget, QListWidgetItem, QMainWindow)
+from PySide6.QtCore import QUrl,Qt, QSize
 from PySide6.QtMultimedia import QMediaPlayer,QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
 
@@ -18,16 +19,34 @@ class MyVideoWidget(QVideoWidget): #建立QVideoWidget的子类，重新keyPress
             self.setFullScreen(False)
 
 class Label(QLabel):
-    def mousePressEvent(self,evt): #双击全屏显示
-        self.setStyleSheet("background-color: green; color: white;")
-
-class VideoPlayer(QWidget):
     def __init__(self, parent = None):
         super().__init__(parent)
+    def mousePressEvent(self, evt): #双击全屏显示
+        self.setStyleSheet("background-color: green; color: white;")
+
+class VideoPlayer(QMainWindow):
+    def __init__(self):
+        super().__init__()
         self.setFixedSize(1200, 760)
         self.setupUi()
 
     def setupUi(self): # 界面
+        self.list_widget = QListWidget()
+        self.list_widget.resize(200, 710)
+
+        for i in range(100):
+            item = QListWidgetItem(f"video{i+1}")
+            item.setToolTip(f"Item woshizhongguoren woshizhongguoen {i}")
+            item.setSizeHint(QSize(0, 40))
+
+            self.list_widget.addItem(item)
+
+        # 将列表控件添加到滚动区域
+        scroll_area = QScrollArea()
+        scroll_area.setFixedSize(200, 730)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff) # 关闭垂直滚动条
+        scroll_area.setWidget(self.list_widget)
+
         self.videoWidget = MyVideoWidget() # 显示视频的控件
         self.audioOutput = QAudioOutput() # 播放音频设备
         self.audioOutput.setVolume(0.5) # 控制音量
@@ -52,23 +71,6 @@ class VideoPlayer(QWidget):
         self.playback_rate_slider.setTickInterval(5)
         self.playback_rate_slider.setTickPosition(QSlider.TicksAbove)
 
-        scrollArea = QScrollArea(self)
-        top_widget = QWidget()
-        scrollArea.setFixedSize(200, 740)
-        scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        # top_widget.setStyleSheet("background-color: red;")
-        top_layout = QVBoxLayout()
-        for i in range(23):
-            text = Label(top_widget)
-            text.setText("标签 {0}".format(i))
-            text.setStyleSheet("background-color: yellow;")
-            text.setFixedSize(150, 40)
-            top_layout.addWidget(text) 
-        top_widget.setLayout(top_layout)
-        scrollArea.setWidget(top_widget)
-
-
-
         action_layout = QHBoxLayout() # 按钮水平布局
         action_layout.addWidget(self.btn_open)
         action_layout.addWidget(self.btn_play_stop)
@@ -79,14 +81,12 @@ class VideoPlayer(QWidget):
         action_layout.addWidget(self.playback_rate_slider)
 
         right_layout = QVBoxLayout(self) # 垂直布局
-        right_layout.setContentsMargins(216, 16, 16, 16)
+        right_layout.setContentsMargins(12, 4, 10, 0)
         right_layout.addWidget(self.videoWidget)
         right_layout.addWidget(self.progress_slider)
         right_layout.addLayout(action_layout)
 
-        main_layout = QHBoxLayout(self) # 主体水平布局
-        main_layout.addLayout(right_layout)
-
+        
         self.player = QMediaPlayer(self) # 音频和视频播放器
         self.player.setVideoOutput(self.videoWidget) # 设置播放器的视频输出控件
         self.player.setAudioOutput(self.audioOutput) # 设置播放器的音频输出设备
@@ -103,7 +103,16 @@ class VideoPlayer(QWidget):
         self.playback_rate_slider.valueChanged.connect(self.play_setPlayRate) # 信号连接
         self.player.positionChanged.connect(self.progress_slider.setValue) # 信号与槽函数
 
+        # 将左右控件添加到主窗口中
+        main_widget = QWidget()
+        main_layout = QHBoxLayout(main_widget)
+        main_layout.addWidget(scroll_area)
+        main_layout.addLayout(right_layout)
 
+        # 将主窗口设置为应用程序的主窗口
+        self.setCentralWidget(main_widget)
+
+        self.list_widget.itemClicked.connect(self.on_item_clicked)
 
     def has_audio_video_changed(self, has): # 有音频和视频时的槽函数
         if has:
@@ -147,7 +156,7 @@ class VideoPlayer(QWidget):
             self.btn_pause_continue.setText("暂停")
 
     def btn_mute_clicked(self): # 静音按钮的槽函数
-        muted = self.audioOupt.isMuted()
+        muted = self.audioOutput.isMuted()
         self.audioOutput.setMuted(not muted)
         if self.audioOutput.isMuted():
             self.btn_mute.setText("放音")
@@ -164,21 +173,27 @@ class VideoPlayer(QWidget):
         self.progress_slider.setRange(0, duration)
 
     def player_setVolume(self, value): # 音量滑块的槽函数
-        self.audioOut.setVolume(value/100)
+        self.audioOutput.setVolume(value / 100)
 
     def play_setPlayRate(self): # 播放速率滑块的槽函数
         if self.player.hasVideo():
-            self.player.setPlaybackRate(self.playback_rate_slider.value() /20)
+            self.player.setPlaybackRate(self.playback_rate_slider.value() / 20)
 
-    def keyPressEvent(self, evt): # 全屏后按Esc键回到原状态
-        print(self.videoWidget.isFullScreen())
-        # if evt.key() == Qt.Key_Escape and self.videoWidget.isFullScreen():
-        #     self.videoWidget.setFullScreen(False)
+    def on_item_clicked(self, item: QListWidgetItem):
+        # 获取项目所在的列
+        column = self.list_widget.row(item)
+        # print(column)  video5.mp4
+        fileName = "{}{}{}".format("/Users/fengye/Downloads/video", column, ".mp4")
+        url = QUrl.fromLocalFile(fileName)
+        self.player.setSource(url) # 设置播放器的播放内容
+        self.progress_slider.setValue(0)
+        self.playback_rate_slider.setValue(20)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
     window = VideoPlayer()
+    window.setWindowTitle("视频播放")
     window.show()
 
     sys.exit(app.exec())

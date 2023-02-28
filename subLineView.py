@@ -86,7 +86,8 @@ class GraphicsView(QGraphicsView):
         self.pixmap_item.setPixmap(pixmap)
 
     def resizeEvent(self, event):
-        self.fitInView(self.pixmap_item, Qt.KeepAspectRatio | Qt.AlignLeft | Qt.AlignTop)
+        # self.fitInView(self.pixmap_item, Qt.KeepAspectRatio | Qt.AlignLeft | Qt.AlignTop)
+        self.fitInView(self.pixmap_item, Qt.KeepAspectRatio)
         super().resizeEvent(event)
 
     def mousePressEvent(self, event):
