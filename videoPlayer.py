@@ -1,8 +1,9 @@
 import sys
 from PySide6.QtWidgets import (QApplication,QPushButton,QVBoxLayout, QLabel,
                       QHBoxLayout,QFileDialog,QWidget,QSlider, QScrollArea,
-                      QListWidget, QListWidgetItem, QMainWindow)
-from PySide6.QtCore import QUrl,Qt, QSize
+                      QListWidget, QListWidgetItem, QMainWindow, QMenuBar)
+from PySide6.QtCore import QUrl, Qt, QSize
+from PySide6.QtGui import QAction
 from PySide6.QtMultimedia import QMediaPlayer,QAudioOutput
 from PySide6.QtMultimediaWidgets import QVideoWidget
 
@@ -18,12 +19,6 @@ class MyVideoWidget(QVideoWidget): #建立QVideoWidget的子类，重新keyPress
         else:
             self.setFullScreen(False)
 
-class Label(QLabel):
-    def __init__(self, parent = None):
-        super().__init__(parent)
-    def mousePressEvent(self, evt): #双击全屏显示
-        self.setStyleSheet("background-color: green; color: white;")
-
 class VideoPlayer(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -31,12 +26,49 @@ class VideoPlayer(QMainWindow):
         self.setupUi()
 
     def setupUi(self): # 界面
+        """建立主程序界面"""
+        menubar = self.menuBar()
+
+        self.language_type = "en" # 语言类型
+
+        self.file_menu = menubar.addMenu("文件") # 一级菜单
+
+        self.dir_setting_action = QAction("目录设置", self) # 子菜单
+        self.dir_setting_action.triggered.connect(self.dir_setting_clicked) # 信号与槽
+        self.file_menu.addAction(self.dir_setting_action) # 将子菜单添加进一级菜单
+
+        self.data_setting_action = QAction("数据库配置", self) # 子菜单
+        self.data_setting_action.triggered.connect(self.data_setting_clicked)
+        self.file_menu.addAction(self.data_setting_action)
+
+        self.video_setting_action = QAction("视频配置", self) #子菜单
+        self.video_setting_action.triggered.connect(self.video_setting_clicked)
+        self.file_menu.addAction(self.video_setting_action)
+
+        self.detect_model_setting_action = QAction("检测模型配置", self) # 子菜单
+        self.detect_model_setting_action.triggered.connect(self.detect_model_setting_clicked)
+        self.file_menu.addAction(self.detect_model_setting_action)
+
+        self.tracking_model_setting_action = QAction("跟踪模型配置", self) # 子菜单
+        self.tracking_model_setting_action.triggered.connect(self.tracking_model_setting_clicked)
+        self.file_menu.addAction(self.tracking_model_setting_action)
+
+        self.about_menu = menubar.addMenu("关于我们") # 一级菜单
+
+        self.cn_change_action = QAction("中文", self) # 子菜单
+        self.cn_change_action.triggered.connect(self.switch_language_clicked)
+        self.about_menu.addAction(self.cn_change_action)
+
+        self.en_change_action = QAction("英文", self) # 子菜单
+        self.en_change_action.triggered.connect(self.switch_language_clicked)
+        self.about_menu.addAction(self.en_change_action)
+
         self.list_widget = QListWidget()
         self.list_widget.resize(200, 710)
 
         for i in range(100):
             item = QListWidgetItem(f"video{i+1}")
-            item.setToolTip(f"Item woshizhongguoren woshizhongguoen {i}")
+            item.setToolTip(f"{i}. Item woshizhongguoren woshizhongguoen")
             item.setSizeHint(QSize(0, 40))
 
             self.list_widget.addItem(item)
@@ -114,6 +146,47 @@ class VideoPlayer(QMainWindow):
 
         self.list_widget.itemClicked.connect(self.on_item_clicked)
 
+    def dir_setting_clicked(self): # 点击目录配置菜单按钮
+        print("点击了目录配置菜单按钮")
+
+    def data_setting_clicked(self): # 点击数据库配置菜单按钮
+        print("点击数据库配置菜单按钮")
+
+    def video_setting_clicked(self): # 点击视频配置菜单按钮
+        print("点击视频配置菜单按钮")
+
+    def detect_model_setting_clicked(self): # 点击检测模型配置菜单按钮
+        print("点击检测模型配置菜单按钮")
+
+    def tracking_model_setting_clicked(self): # 点击跟踪模型配置菜单按钮
+        print("点击检测模型配置菜单按钮")
+
+    def switch_language_clicked(self): # 切换中英文菜单栏
+        sender = self.sender()
+
+        if sender == self.cn_change_action:
+            # 切换为中文
+            self.file_menu.setTitle("文件")
+            self.dir_setting_action.setText("目录设置")
+            self.data_setting_action.setText("数据库配置")
+            self.video_setting_action.setText("视频配置")
+            self.detect_model_setting_action.setText("检测模型配置")
+            self.tracking_model_setting_action.setText("跟踪模型配置")
+            self.about_menu.setTitle("关于我们")
+            self.cn_change_action.setText("中文")
+            self.en_change_action.setText("英文")
+        else:
+            # 切换为英文
+            self.file_menu.setTitle("Files")
+            self.dir_setting_action.setText("dirSetting")
+            self.data_setting_action.setText("dataSetting")
+            self.video_setting_action.setText("videoSetting")
+            self.detect_model_setting_action.setText("detectModelSetting")
+            self.tracking_model_setting_action.setText("trackingModelSetting")
+            self.about_menu.setTitle("About us")
+            self.cn_change_action.setText("chinese")
+            self.en_change_action.setText("english")
+    
     def has_audio_video_changed(self, has): # 有音频和视频时的槽函数
         if has:
             self.btn_play_stop.setEnabled(True)
@@ -130,6 +203,7 @@ class VideoPlayer(QMainWindow):
             self.player.setSource(url) # 设置播放器的播放内容
             self.progress_slider.setValue(0)
             self.playback_rate_slider.setValue(20)
+            self.player.play()
 
     def btn_play_stop_clicked(self):
         print(self.btn_play_stop.text())
@@ -182,12 +256,12 @@ class VideoPlayer(QMainWindow):
     def on_item_clicked(self, item: QListWidgetItem):
         # 获取项目所在的列
         column = self.list_widget.row(item)
-        # print(column)  video5.mp4
         fileName = "{}{}{}".format("/Users/fengye/Downloads/video", column, ".mp4")
         url = QUrl.fromLocalFile(fileName)
         self.player.setSource(url) # 设置播放器的播放内容
         self.progress_slider.setValue(0)
         self.playback_rate_slider.setValue(20)
+        self.player.play()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
